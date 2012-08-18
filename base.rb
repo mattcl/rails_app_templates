@@ -13,5 +13,4 @@ gem 'activeadmin'
 run "echo database.yml > config/.gitignore"
 git :init
 git :add => "."
-git :commit => "-a -m 'initial commit'"
 
