@@ -51,7 +51,7 @@ RSPEC
 generate 'foundation:install'
 inside('app/views') do
   run 'rm layouts/application.html.erb'
-  file 'layouts/applicaiton.html.erb', <<-VIEW
+  file 'layouts/application.html.erb', <<-VIEW
 <!DOCTYPE html>
 <html>
   <head>
