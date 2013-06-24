@@ -1,5 +1,7 @@
 # base.rb rails applicaiton template
 
+use_devise = yes? 'use devise and generate default user?'
+
 # cleanup
 run "rm public/index.html"
 run "rm README.rdoc"
@@ -7,8 +9,8 @@ run "touch README.md"
 run "echo TODO > README.md"
 
 # setup gems
-gem 'devise'
-gem 'activeadmin'
+gem 'devise' if use_devise
+gem 'activeadmin' if use_devise
 gem 'high_voltage'
 gem 'redcarpet'
 gem 'simple_form'
@@ -91,12 +93,13 @@ NAV
 end
 
 # devise
-generate 'model User username:string'
-generate 'devise:install'
-generate 'devise User'
-generate 'devise:views'
-run 'mkdir app/views/devise/menu'
-file 'app/views/devise/menu/_login_items.html.erb', <<-AUTHSTATUS
+if use_devise
+  generate 'model User username:string'
+  generate 'devise:install'
+  generate 'devise User'
+  generate 'devise:views'
+  run 'mkdir app/views/devise/menu'
+  file 'app/views/devise/menu/_login_items.html.erb', <<-AUTHSTATUS
 <li class="divider"></li>
 <% if user_signed_in? %>
   <li><%= link_to("Logged in as \#{current_user.username}", edit_user_registration_path) %></li>
@@ -109,7 +112,7 @@ file 'app/views/devise/menu/_login_items.html.erb', <<-AUTHSTATUS
 <% end %>
 AUTHSTATUS
 
-file 'app/views/devise/sessions/new.html.erb', <<-LOGIN, :force => true
+  file 'app/views/devise/sessions/new.html.erb', <<-LOGIN, :force => true
 <div class="row">
   <div class="large-4 large-centered column">
     <h2>Sign in</h2>
@@ -131,7 +134,7 @@ file 'app/views/devise/sessions/new.html.erb', <<-LOGIN, :force => true
 </div>
 LOGIN
 
-file 'app/views/devise/registrations/new.html.erb', <<-REGISTRATION, :force => true
+  file 'app/views/devise/registrations/new.html.erb', <<-REGISTRATION, :force => true
 <div class="row">
   <div class="large-4 large-centered column">
     <h2>Sign up</h2>
@@ -156,7 +159,7 @@ file 'app/views/devise/registrations/new.html.erb', <<-REGISTRATION, :force => t
 </div>
 REGISTRATION
 
-file 'app/views/devise/registrations/edit.html.erb', <<-EDITREGISTRATION, :force => true
+  file 'app/views/devise/registrations/edit.html.erb', <<-EDITREGISTRATION, :force => true
 <div class="row">
   <div class="large-4 large-centered column">
     <h2>Edit <%= resource_name.to_s.humanize %></h2>
@@ -189,6 +192,7 @@ file 'app/views/devise/registrations/edit.html.erb', <<-EDITREGISTRATION, :force
   </div>
 </div>
 EDITREGISTRATION
+end
 
 # Git Ignore
 file '.gitignore', <<-GITIGNORE, :force => true
